@@ -56,31 +56,34 @@ class Deanery(models.Model):
         return self.name
 
 
-# class Department(models.Model):
-#     """Департамент, к которому относится помещение"""
-#     name = CICharField(
-#         max_length=255,
-#         unique=True,
-#         verbose_name='Департамент',
-#     )
-#     boss = models.CharField(
-#         max_length=60,
-#         verbose_name='Директор',
-#     )
-#     phone = PhoneNumberField(
-#         unique=True,
-#         null=True, blank=True,
-#         verbose_name='Телефон',
-#     )
-#     deanery = models.CharField(
-#         max_length=60,
-#         verbose_name='Деканат',
-#     )
+class Department(models.Model):
+    """Департамент, к которому относится помещение"""
+    name = CICharField(
+        max_length=255,
+        unique=True,
+        verbose_name='Департамент',
+    )
+    boss = models.CharField(
+        max_length=60,
+        verbose_name='Директор',
+    )
+    phone = PhoneNumberField(
+        unique=True,
+        null=True, blank=True,
+        verbose_name='Телефон',
+    )
+    deanery = models.ForeignKey(
+        Deanery,
+        null=True, blank=True,
+        verbose_name='Деканат',
+        related_name='departments',
+        on_delete=models.SET_NULL,
+    )
 
-#     class Meta:
-#         verbose_name = 'Депарамент'
-#         verbose_name_plural = 'Департаменты'
-#         ordering = ('id',)
+    class Meta:
+        verbose_name = 'Депарамент'
+        verbose_name_plural = 'Департаменты'
+        ordering = ('id',)
 
-#     def __str__(self):
-#         self.name
+    def __str__(self):
+        self.name

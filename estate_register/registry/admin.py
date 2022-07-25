@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Deanery,
-    # Department,
+    Department,
     Material,
     Target,
 )
@@ -27,7 +27,8 @@ class DeaneryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-# @admin.register(Department)
-# class DepartmentAdmin(admin.ModelAdmin):
-#     list_display = ('name', 'boss', 'phone', 'dianery')
-#     search_fields = ('name', 'dianery')
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'boss', 'phone', 'deanery')
+    list_filter = ('deanery',)
+    search_fields = ('name',)
