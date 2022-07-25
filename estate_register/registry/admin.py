@@ -11,20 +11,20 @@ from .models import (
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
-    list_display = ('id', 'material')
-    search_fields = ('material',)
+    list_display = ('id', 'name')
+    search_fields = ('name',)
 
 
 @admin.register(Target)
 class TargetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'target')
-    search_fields = ('target',)
+    list_display = ('id', 'name')
+    search_fields = ('name',)
 
 
 @admin.register(Deanery)
 class DeaneryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'deanery')
-    search_fields = ('deanery',)
+    list_display = ('id', 'name')
+    search_fields = ('name',)
 
 
 # @admin.register(Department)

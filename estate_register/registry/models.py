@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class Material(models.Model):
     """Материал здания"""
-    material = CICharField(
+    name = CICharField(
         max_length=255,
         unique=True,
         verbose_name='Материал',
@@ -19,12 +19,12 @@ class Material(models.Model):
         ordering = ('id',)
 
     def __str__(self):
-        return self.material
+        return self.name
 
 
 class Target(models.Model):
     """Целевое назначение помещения"""
-    target = CICharField(
+    name = CICharField(
         max_length=255,
         unique=True,
         verbose_name='Назначение помещения',
@@ -36,12 +36,12 @@ class Target(models.Model):
         ordering = ('id',)
 
     def __str__(self):
-        return self.target
+        return self.name
 
 
 class Deanery(models.Model):
     """Деканат"""
-    deanery = CICharField(
+    name = CICharField(
         max_length=255,
         unique=True,
         verbose_name='Деканат',
@@ -53,7 +53,7 @@ class Deanery(models.Model):
         ordering = ('id',)
 
     def __str__(self):
-        return self.deanery
+        return self.name
 
 
 # class Department(models.Model):
