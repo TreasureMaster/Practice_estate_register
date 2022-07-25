@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.postgres.fields import CICharField
 
 # Create your models here.
 
 class Material(models.Model):
     """Материал здания"""
-    material = models.CharField(
+    material = CICharField(
         max_length=255,
         unique=True,
         verbose_name='Материал',
