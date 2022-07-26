@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import (
+    Building,
     Deanery,
     Department,
     Material,
@@ -32,3 +33,12 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'boss', 'phone', 'deanery')
     list_filter = ('deanery',)
     search_fields = ('name',)
+
+
+@admin.register(Building)
+class BuildingAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'address', 'flows', 'year', 'wear', 'material', 'land'
+    )
+    list_filter = ('material',)
+    search_fields = ('name', 'address', 'year', 'wear', 'material')

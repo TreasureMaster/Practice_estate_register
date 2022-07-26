@@ -74,7 +74,7 @@ class Department(models.Model):
     )
     deanery = models.ForeignKey(
         Deanery,
-        null=True, blank=True,
+        null=True,
         verbose_name='Деканат',
         related_name='departments',
         on_delete=models.SET_NULL,
@@ -87,3 +87,53 @@ class Department(models.Model):
 
     def __str__(self):
         self.name
+
+
+class Building(models.Model):
+    """Здание комплекса зданий"""
+    name = models.CharField(
+        max_length=60,
+        verbose_name='Здание',
+    )
+    land = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Площадь участка',
+    )
+    address = models.CharField(
+        max_length=255,
+        verbose_name='Адрес',
+    )
+    year = models.PositiveSmallIntegerField(
+        verbose_name='Год постройки',
+    )
+    wear = models.PositiveSmallIntegerField(
+        verbose_name='Износ (%)',
+    )
+    flows = models.PositiveSmallIntegerField(
+        verbose_name='Этажи',
+    )
+    picture = models.ImageField(
+        verbose_name='Фото здания',
+        null=True, blank=True,
+        upload_to='images/%Y/%m/%m',
+    )
+    comment = models.TextField(
+        verbose_name='Доп.сведения',
+        null=True, blank=True,
+    )
+    material = models.ForeignKey(
+        Material,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='buildings',
+        verbose_name='Материал',
+    )
+
+    class Meta:
+        verbose_name = 'Здание'
+        verbose_name_plural = 'Здания'
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.name

@@ -288,3 +288,6 @@ $RECYCLE.BIN/
 # Python files
 __pycache__/
 *.pyc
+
+# Doc files
+~$*
