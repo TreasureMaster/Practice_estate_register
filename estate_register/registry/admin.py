@@ -41,4 +41,4 @@ class BuildingAdmin(admin.ModelAdmin):
         'name', 'address', 'floors', 'year', 'wear', 'material', 'land'
     )
     list_filter = ('material',)
-    search_fields = ('name', 'address', 'year', 'wear', 'material')
+    search_fields = ('name',)
