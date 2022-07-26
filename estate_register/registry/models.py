@@ -110,7 +110,7 @@ class Building(models.Model):
     wear = models.PositiveSmallIntegerField(
         verbose_name='Износ (%)',
     )
-    flows = models.PositiveSmallIntegerField(
+    floors = models.PositiveSmallIntegerField(
         verbose_name='Этажи',
     )
     picture = models.ImageField(

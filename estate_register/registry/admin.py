@@ -38,7 +38,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'address', 'flows', 'year', 'wear', 'material', 'land'
+        'name', 'address', 'floors', 'year', 'wear', 'material', 'land'
     )
     list_filter = ('material',)
     search_fields = ('name', 'address', 'year', 'wear', 'material')

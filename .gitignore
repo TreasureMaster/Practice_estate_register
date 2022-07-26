@@ -291,3 +291,6 @@ __pycache__/
 
 # Doc files
 ~$*
+
+# My Files
+old_scripts/
