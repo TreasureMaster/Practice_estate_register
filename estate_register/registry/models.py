@@ -86,7 +86,7 @@ class Department(models.Model):
         ordering = ('id',)
 
     def __str__(self):
-        self.name
+        return self.name
 
 
 class Building(models.Model):
