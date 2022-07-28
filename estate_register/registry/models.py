@@ -1,3 +1,5 @@
+import datetime as dt
+
 from django.db import models
 from django.contrib.postgres.fields import CICharField
 
@@ -212,3 +214,55 @@ class Chief(models.Model):
 
     def __str__(self):
         return self.chief
+
+
+class Unit(models.Model):
+    """Имущество"""
+    name = models.CharField(
+        max_length=120,
+        verbose_name='Имущество',
+    )
+    date_start = models.DateField(
+        verbose_name='Постановка на учет',
+        default=dt.date.today,
+    )
+    cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Стоимость',
+    )
+    cost_year = models.PositiveSmallIntegerField(
+        verbose_name='Год переоценки',
+        null=True,
+    )
+    cost_after = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        verbose_name='Стоимость после переоценки',
+    )
+    period = models.PositiveSmallIntegerField(
+        verbose_name='Срок службы',
+    )
+    hall = models.ForeignKey(
+        Hall,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='units',
+        verbose_name='Помещение',
+    )
+    chief = models.ForeignKey(
+        Chief,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='units',
+        verbose_name='Ответственный',
+    )
+
+    class Meta:
+        verbose_name = 'Имущество'
+        verbose_name_plural = 'Имущество'
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.name

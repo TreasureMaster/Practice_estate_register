@@ -9,6 +9,7 @@ from .models import (
     Hall,
     Material,
     Target,
+    Unit,
 )
 
 # Register your models here.
@@ -65,3 +66,16 @@ class HallAdmin(admin.ModelAdmin):
 class ChiefAdmin(admin.ModelAdmin):
     list_display = ('chief', 'address', 'experience')
     search_fields = ('chief',)
+
+
+@admin.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'date_start', 'cost', 'period',
+        'cost_year', 'cost_after', 'hall', 'chief',
+    )
+    list_filter = (
+        ('hall', admin.filters.EmptyFieldListFilter),
+        ('chief', admin.filters.EmptyFieldListFilter),
+    )
+    search_fields = ('name',)
