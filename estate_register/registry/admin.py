@@ -45,7 +45,10 @@ class BuildingAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'address', 'floors', 'year', 'wear', 'material', 'land',
     )
-    list_filter = (('material', RelatedDropdownFilter),)
+    list_filter = (
+        ('material', RelatedDropdownFilter),
+        ('picture', admin.filters.EmptyFieldListFilter)
+    )
     empty_value_display = '- не задано -'
     search_fields = ('name',)
 
@@ -80,6 +83,7 @@ class UnitAdmin(admin.ModelAdmin):
     list_filter = (
         ('hall', RelatedDropdownFilter),
         ('chief', RelatedDropdownFilter),
+        'date_start',
     )
     empty_value_display = '- не задано -'
     search_fields = ('name',)
