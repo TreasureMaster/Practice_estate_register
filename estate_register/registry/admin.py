@@ -3,6 +3,7 @@ from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from .models import (
     Building,
+    Chief,
     Deanery,
     Department,
     Hall,
@@ -58,3 +59,9 @@ class HallAdmin(admin.ModelAdmin):
         ('building', RelatedDropdownFilter),
     )
     search_fields = ('number',)
+
+
+@admin.register(Chief)
+class ChiefAdmin(admin.ModelAdmin):
+    list_display = ('chief', 'address', 'experience')
+    search_fields = ('chief',)

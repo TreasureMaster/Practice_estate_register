@@ -188,3 +188,27 @@ class Hall(models.Model):
             self.target.name if self.target is not None else 'помещение',
             self.building.name,
         )
+
+
+class Chief(models.Model):
+    """Ответственные за имущество"""
+    chief = models.CharField(
+        max_length=60,
+        verbose_name='Ответственный за имущество',
+    )
+    address = models.CharField(
+        max_length=255,
+        verbose_name='Адрес проживания',
+    )
+    experience = models.PositiveSmallIntegerField(
+        verbose_name='Опыт (лет)',
+        default=0,
+    )
+
+    class Meta:
+        verbose_name = 'Ответственный за имущество'
+        verbose_name_plural = 'Ответственные за имущество'
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.chief
