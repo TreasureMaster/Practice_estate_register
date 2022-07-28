@@ -35,16 +35,18 @@ class DeaneryAdmin(admin.ModelAdmin):
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('name', 'boss', 'phone', 'deanery')
-    list_filter = ('deanery',)
+    list_filter = (('deanery', RelatedDropdownFilter),)
+    empty_value_display = '- не задано -'
     search_fields = ('name',)
 
 
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'address', 'floors', 'year', 'wear', 'material', 'land'
+        'name', 'address', 'floors', 'year', 'wear', 'material', 'land',
     )
-    list_filter = ('material',)
+    list_filter = (('material', RelatedDropdownFilter),)
+    empty_value_display = '- не задано -'
     search_fields = ('name',)
 
 
@@ -55,10 +57,11 @@ class HallAdmin(admin.ModelAdmin):
         'square', 'windows', 'heaters',
     )
     list_filter = (
-        ('target', admin.filters.EmptyFieldListFilter),
-        ('department', admin.filters.EmptyFieldListFilter),
+        ('target', RelatedDropdownFilter),
+        ('department', RelatedDropdownFilter),
         ('building', RelatedDropdownFilter),
     )
+    empty_value_display = '- не задано -'
     search_fields = ('number',)
 
 
@@ -74,9 +77,9 @@ class UnitAdmin(admin.ModelAdmin):
         'name', 'date_start', 'cost', 'period',
         'cost_year', 'cost_after', 'hall', 'chief',
     )
-    # list_filter = ('hall', 'chief')
     list_filter = (
-        ('hall', admin.filters.EmptyFieldListFilter),
-        ('chief', admin.filters.EmptyFieldListFilter),
+        ('hall', RelatedDropdownFilter),
+        ('chief', RelatedDropdownFilter),
     )
+    empty_value_display = '- не задано -'
     search_fields = ('name',)
