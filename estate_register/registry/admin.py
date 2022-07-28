@@ -74,6 +74,7 @@ class UnitAdmin(admin.ModelAdmin):
         'name', 'date_start', 'cost', 'period',
         'cost_year', 'cost_after', 'hall', 'chief',
     )
+    # list_filter = ('hall', 'chief')
     list_filter = (
         ('hall', admin.filters.EmptyFieldListFilter),
         ('chief', admin.filters.EmptyFieldListFilter),

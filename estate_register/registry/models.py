@@ -76,7 +76,7 @@ class Department(models.Model):
     )
     deanery = models.ForeignKey(
         Deanery,
-        null=True,
+        null=True, blank=True,
         verbose_name='Деканат',
         related_name='departments',
         on_delete=models.SET_NULL,
@@ -126,7 +126,7 @@ class Building(models.Model):
     )
     material = models.ForeignKey(
         Material,
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name='buildings',
         verbose_name='Материал',
@@ -145,7 +145,7 @@ class Hall(models.Model):
     """Помещение в здании"""
     number = models.PositiveSmallIntegerField(
         verbose_name='Номер помещения',
-        null=True,
+        null=True, blank=True,
     )
     square = models.DecimalField(
         max_digits=10,
@@ -160,14 +160,14 @@ class Hall(models.Model):
     )
     target = models.ForeignKey(
         Target,
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name='halls',
         verbose_name='Назначение помещения',
     )
     department = models.ForeignKey(
         Department,
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name='halls',
         verbose_name='Департамент',
@@ -233,12 +233,12 @@ class Unit(models.Model):
     )
     cost_year = models.PositiveSmallIntegerField(
         verbose_name='Год переоценки',
-        null=True,
+        null=True, blank=True,
     )
     cost_after = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        null=True,
+        null=True, blank=True,
         verbose_name='Стоимость после переоценки',
     )
     period = models.PositiveSmallIntegerField(
@@ -246,14 +246,14 @@ class Unit(models.Model):
     )
     hall = models.ForeignKey(
         Hall,
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name='units',
         verbose_name='Помещение',
     )
     chief = models.ForeignKey(
         Chief,
-        null=True,
+        null=True, blank=True,
         on_delete=models.SET_NULL,
         related_name='units',
         verbose_name='Ответственный',
