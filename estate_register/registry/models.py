@@ -1,6 +1,7 @@
 import datetime as dt
 
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.postgres.fields import CICharField
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -108,6 +109,10 @@ class Building(models.Model):
     )
     year = models.PositiveSmallIntegerField(
         verbose_name='Год постройки',
+        validators=[
+            MinValueValidator(1600),
+            MaxValueValidator(dt.date.today().year),
+        ]
     )
     wear = models.PositiveSmallIntegerField(
         verbose_name='Износ (%)',
