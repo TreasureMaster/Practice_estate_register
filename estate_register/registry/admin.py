@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from .models import (
     Building,
@@ -51,5 +52,9 @@ class HallAdmin(admin.ModelAdmin):
         'number', 'target', 'building', 'department',
         'square', 'windows', 'heaters',
     )
-    list_filter = ('building',)
+    list_filter = (
+        ('target', admin.filters.EmptyFieldListFilter),
+        ('department', admin.filters.EmptyFieldListFilter),
+        ('building', RelatedDropdownFilter),
+    )
     search_fields = ('number',)

@@ -161,7 +161,7 @@ class Hall(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         related_name='halls',
-        verbose_name='Назначение',
+        verbose_name='Назначение помещения',
     )
     department = models.ForeignKey(
         Department,

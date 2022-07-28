@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'registry.apps.RegistryConfig',
     'phonenumber_field',
+    'django_admin_listfilter_dropdown',
 ]
 
 MIDDLEWARE = [
