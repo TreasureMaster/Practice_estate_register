@@ -4,6 +4,7 @@ from .models import (
     Building,
     Deanery,
     Department,
+    Hall,
     Material,
     Target,
 )
@@ -42,3 +43,13 @@ class BuildingAdmin(admin.ModelAdmin):
     )
     list_filter = ('material',)
     search_fields = ('name',)
+
+
+@admin.register(Hall)
+class HallAdmin(admin.ModelAdmin):
+    list_display = (
+        'number', 'target', 'building', 'department',
+        'square', 'windows', 'heaters',
+    )
+    list_filter = ('building',)
+    search_fields = ('number',)

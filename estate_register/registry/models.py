@@ -137,3 +137,54 @@ class Building(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Hall(models.Model):
+    """Помещение в здании"""
+    number = models.PositiveSmallIntegerField(
+        verbose_name='Номер помещения',
+        null=True,
+    )
+    square = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Площадь',
+    )
+    windows = models.PositiveSmallIntegerField(
+        verbose_name='Кол-во окон',
+    )
+    heaters = models.PositiveSmallIntegerField(
+        verbose_name='Кол-во обогревателей',
+    )
+    target = models.ForeignKey(
+        Target,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='halls',
+        verbose_name='Назначение',
+    )
+    department = models.ForeignKey(
+        Department,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='halls',
+        verbose_name='Департамент',
+    )
+    building = models.ForeignKey(
+        Building,
+        on_delete=models.CASCADE,
+        related_name='halls',
+        verbose_name='Здание',
+    )
+
+    class Meta:
+        verbose_name = 'Помещение'
+        verbose_name_plural = 'Помещения'
+        ordering = ('id',)
+
+    def __str__(self):
+        return '{}{}, {}'.format(
+            f'№ {self.number}, ' if self.number is not None else '',
+            self.target.name if self.target is not None else 'помещение',
+            self.building.name,
+        )
