@@ -1,6 +1,8 @@
 import datetime as dt
+import django
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.postgres.fields import CICharField
 
@@ -102,6 +104,9 @@ class Building(models.Model):
         max_digits=10,
         decimal_places=2,
         verbose_name='Площадь участка',
+        validators=[
+            MinValueValidator(0),
+        ]
     )
     address = models.CharField(
         max_length=255,
@@ -116,9 +121,15 @@ class Building(models.Model):
     )
     wear = models.PositiveSmallIntegerField(
         verbose_name='Износ (%)',
+        validators=[
+            MaxValueValidator(100),
+        ]
     )
     floors = models.PositiveSmallIntegerField(
         verbose_name='Этажи',
+        validators=[
+            MinValueValidator(1),
+        ]
     )
     picture = models.ImageField(
         verbose_name='Фото здания',
@@ -156,6 +167,9 @@ class Hall(models.Model):
         max_digits=10,
         decimal_places=2,
         verbose_name='Площадь',
+        validators=[
+            MinValueValidator(0),
+        ]
     )
     windows = models.PositiveSmallIntegerField(
         verbose_name='Кол-во окон',
@@ -210,6 +224,9 @@ class Chief(models.Model):
     experience = models.PositiveSmallIntegerField(
         verbose_name='Опыт (лет)',
         default=0,
+        validators=[
+            MaxValueValidator(100),
+        ]
     )
 
     class Meta:
@@ -235,6 +252,9 @@ class Unit(models.Model):
         max_digits=10,
         decimal_places=2,
         verbose_name='Стоимость',
+        validators=[
+            MinValueValidator(0),
+        ]
     )
     cost_year = models.PositiveSmallIntegerField(
         verbose_name='Год переоценки',
@@ -271,3 +291,11 @@ class Unit(models.Model):
 
     def __str__(self):
         return self.name
+
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        if self.cost_year < self.date_start.year:
+            raise ValidationError({
+                'cost_year': ('Год переоценки не может быть меньше года '
+                             f'постановки на учет: {self.date_start.year}')
+            })
