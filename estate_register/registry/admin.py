@@ -51,6 +51,13 @@ class BuildingAdmin(admin.ModelAdmin):
     )
     empty_value_display = '- не задано -'
     search_fields = ('name',)
+    fieldsets = (
+        ('Описание здания', {'fields': ('name', 'address')}),
+        ('Характеристики здания', {
+            'fields': ('year', 'wear', 'material', 'floors', 'land')
+        }),
+        ('Дополнительные сведения', {'fields': ('picture', 'comment')}),
+    )
 
 
 @admin.register(Hall)
@@ -66,6 +73,15 @@ class HallAdmin(admin.ModelAdmin):
     )
     empty_value_display = '- не задано -'
     search_fields = ('number',)
+    fieldsets = (
+        ('Описание помещения', {'fields': ('number', 'target')}),
+        ('Характеристики помещения', {
+            'fields': ('square', 'windows', 'heaters')
+        }),
+        ('Местонахождение и принадлежность', {
+            'fields': ('building', 'department')
+        }),
+    )
 
 
 @admin.register(Chief)
@@ -87,3 +103,15 @@ class UnitAdmin(admin.ModelAdmin):
     )
     empty_value_display = '- не задано -'
     search_fields = ('name',)
+    fieldsets = (
+        ('Описание имущества', {
+            'fields': ('name', 'hall'),
+        }),
+        ('Бухгалтерская информация', {
+            'fields': ('cost', 'date_start', 'period'),
+        }),
+        ('Переоценка', {
+            'fields': ('cost_year', 'cost_after'),
+        }),
+        ('Ответственный за имущество', {'fields': ('chief',)}),
+    )
