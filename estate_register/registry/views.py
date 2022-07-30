@@ -19,25 +19,26 @@ from .models import (
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class MaterialListView(View):
+class BaseEntityListView(View):
     def get(self, request):
 
         return JsonResponse({
             'materials': serializers.serialize(
                 'python',
-                Material.objects.all(),
+                self._model.objects.all(),
                 # fields=('name',),
             ),
         })
 
     def post(self, request):
-        if not (data := request.body) or not (material := json.loads(data)):
+        material = None
+        if not (data := request.body) or not (json_data := json.loads(data)):
             return JsonResponse(
                 {'error': 'Ничего не передано'},
                 status=400,
             )
         try:
-            material = Material(**material)
+            material = self._model(**json_data)
             material.full_clean()
         except (TypeError, ValidationError) as e:
             del material
@@ -56,9 +57,9 @@ class MaterialListView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class MaterialView(View):
+class BaseEntityView(View):
     def get(self, request, pk):
-        material = Material.objects.filter(pk=pk)
+        material = self._model.objects.filter(pk=pk)
         if not material:
             return JsonResponse(
                 {'error': f'Запись с id={pk} не существует'},
@@ -70,7 +71,7 @@ class MaterialView(View):
         })
 
     def patch(self, request, pk):
-        material = Material.objects.get(pk=pk)
+        material = self._model.objects.get(pk=pk)
         if not material:
             return JsonResponse(
                 {'error': f'Запись с id={pk} не существует'},
@@ -104,7 +105,7 @@ class MaterialView(View):
         return JsonResponse(model_to_dict(material))
 
     def delete(self, request, pk):
-        material = Material.objects.filter(pk=pk)
+        material = self._model.objects.filter(pk=pk)
         if not material:
             return JsonResponse(
                 {'error': f'Запись с id={pk} не существует'},
@@ -121,3 +122,11 @@ class MaterialView(View):
             )
 
         return HttpResponse(status=204)
+
+
+class MaterialListView(BaseEntityListView):
+    _model = Material
+
+
+class MaterialView(BaseEntityView):
+    _model = Material
