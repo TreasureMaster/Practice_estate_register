@@ -22,6 +22,11 @@ class GetFieldsNameMixin:
             if isinstance(f, models.Field)
         )
 
+    @classmethod
+    def get_model_name(cls):
+        """Получить имя модели"""
+        return cls._meta.model_name
+
 
 class Material(models.Model, GetFieldsNameMixin):
     """Материал здания"""

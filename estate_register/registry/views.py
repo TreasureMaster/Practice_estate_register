@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.template.defaultfilters import pluralize
 from django.views import View
 
 # Для тестов из Postman нужно убрать CSRF
@@ -21,60 +22,63 @@ from .models import (
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class BaseEntityListView(View):
+class BaseListResource(View):
     def get(self, request):
+        entries = self._model.objects.all()
 
-        return JsonResponse({
-            'materials': serializers.serialize(
-                'python',
-                self._model.objects.all(),
-                # fields=('name',),
-            ),
-        })
+        return JsonResponse(
+            dict.fromkeys(
+                [f'{self._model.get_model_name()}{pluralize(len(entries))}'],
+                serializers.serialize('python', entries,)
+            )
+        )
 
     def post(self, request):
-        material = None
+        entry = None
         if not (data := request.body) or not (json_data := json.loads(data)):
             return JsonResponse(
                 {'error': 'Ничего не передано'},
                 status=400,
             )
         try:
-            material = self._model(**json_data)
-            material.full_clean()
+            entry = self._model(**json_data)
+            entry.full_clean()
         except (TypeError, ValidationError) as e:
-            del material
+            del entry
             return JsonResponse(
                 {'error': str(e)},
                 status=400,
             )
         else:
-            material.save()
+            entry.save()
 
         return JsonResponse(
-            model_to_dict(material),
+            model_to_dict(entry),
             # serializers.serialize('python', [model_to_dict(material)]),
             status=201
         )
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class BaseEntityView(View):
+class BaseResource(View):
     def get(self, request, pk):
-        material = self._model.objects.filter(pk=pk)
-        if not material:
+        entry = self._model.objects.filter(pk=pk)
+        if not entry:
             return JsonResponse(
                 {'error': f'Запись с id={pk} не существует'},
                 status=404,
             )
 
-        return JsonResponse({
-            'material': serializers.serialize('python', material,),
-        })
+        return JsonResponse(
+            dict.fromkeys(
+                [self._model.get_model_name()],
+                serializers.serialize('python', entry,)
+            )
+        )
 
     def patch(self, request, pk):
-        material = self._model.objects.get(pk=pk)
-        if not material:
+        entry = self._model.objects.get(pk=pk)
+        if not entry:
             return JsonResponse(
                 {'error': f'Запись с id={pk} не существует'},
                 status=404,
@@ -85,7 +89,7 @@ class BaseEntityView(View):
                 status=400,
             )
         if (extra_keys :=
-            (set(json_data.keys()) - set(material.get_self_field_names()))
+            (set(json_data.keys()) - set(entry.get_self_field_names()))
         ):
             return JsonResponse(
                 {'error': f'Лишние поля: {", ".join(extra_keys)}'},
@@ -93,31 +97,31 @@ class BaseEntityView(View):
             )
         try:
             for fieldname in json_data.keys():
-                setattr(material, fieldname, json_data[fieldname])
-            material.full_clean()
+                setattr(entry, fieldname, json_data[fieldname])
+            entry.full_clean()
         except (AttributeError, ValidationError) as e:
-            del material
+            del entry
             return JsonResponse(
                 {'error': str(e)},
                 status=400,
             )
         else:
-            material.save()
+            entry.save()
 
-        return JsonResponse(model_to_dict(material))
+        return JsonResponse(model_to_dict(entry))
 
     def delete(self, request, pk):
-        material = self._model.objects.filter(pk=pk)
-        if not material:
+        entry = self._model.objects.filter(pk=pk)
+        if not entry:
             return JsonResponse(
                 {'error': f'Запись с id={pk} не существует'},
                 status=404,
             )
 
         try:
-            material.delete()
+            entry.delete()
         except Exception as e:
-            del material
+            del entry
             return JsonResponse(
                 {'error': str(e)},
                 status=500,
@@ -126,25 +130,25 @@ class BaseEntityView(View):
         return HttpResponse(status=204)
 
 
-class MaterialListView(BaseEntityListView):
+class MaterialListResource(BaseListResource):
     _model = Material
 
 
-class MaterialView(BaseEntityView):
+class MaterialResource(BaseResource):
     _model = Material
 
 
-class TargetListView(BaseEntityListView):
+class TargetListResource(BaseListResource):
     _model = Target
 
 
-class TargetView(BaseEntityView):
+class TargetResource(BaseResource):
     _model = Target
 
 
-class DeaneryListView(BaseEntityListView):
+class DeaneryListResource(BaseListResource):
     _model = Deanery
 
 
-class DeaneryView(BaseEntityView):
+class DeaneryResource(BaseResource):
     _model = Deanery
