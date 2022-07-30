@@ -1,21 +1,37 @@
 import datetime as dt
-import django
 
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    MinLengthValidator,
+    MaxValueValidator,
+    MinValueValidator,
+)
 from django.contrib.postgres.fields import CICharField
 
 from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
-class Material(models.Model):
+class GetFieldsNameMixin:
+    """Доступ к именам полей"""
+    def get_self_field_names(self):
+        """Получить имена объявленных полей"""
+        return (
+            f.name for f in self._meta.get_fields()
+            if isinstance(f, models.Field)
+        )
+
+
+class Material(models.Model, GetFieldsNameMixin):
     """Материал здания"""
     name = CICharField(
         max_length=255,
         unique=True,
         verbose_name='Материал',
+        validators=[
+            MinLengthValidator(1),
+        ]
     )
 
     class Meta:
