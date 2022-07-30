@@ -12,7 +12,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import (
+    Deanery,
     Material,
+    Target,
 )
 
 # Create your views here.
@@ -130,3 +132,19 @@ class MaterialListView(BaseEntityListView):
 
 class MaterialView(BaseEntityView):
     _model = Material
+
+
+class TargetListView(BaseEntityListView):
+    _model = Target
+
+
+class TargetView(BaseEntityView):
+    _model = Target
+
+
+class DeaneryListView(BaseEntityListView):
+    _model = Deanery
+
+
+class DeaneryView(BaseEntityView):
+    _model = Deanery

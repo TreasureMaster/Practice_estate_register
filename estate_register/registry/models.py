@@ -43,12 +43,15 @@ class Material(models.Model, GetFieldsNameMixin):
         return self.name
 
 
-class Target(models.Model):
+class Target(models.Model, GetFieldsNameMixin):
     """Целевое назначение помещения"""
     name = CICharField(
         max_length=255,
         unique=True,
         verbose_name='Назначение помещения',
+        validators=[
+            MinLengthValidator(1),
+        ]
     )
 
     class Meta:
@@ -60,7 +63,7 @@ class Target(models.Model):
         return self.name
 
 
-class Deanery(models.Model):
+class Deanery(models.Model, GetFieldsNameMixin):
     """Деканат"""
     name = CICharField(
         max_length=255,
