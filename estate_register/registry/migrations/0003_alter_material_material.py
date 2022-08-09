@@ -5,6 +5,15 @@ from django.contrib.postgres.operations import CITextExtension
 from django.db import migrations
 
 
+def fill_materials(apps, schema_editor):
+    """Заполнение модели Material данными"""
+    materials = ('Кирпич', 'Дерево', 'Железобетон', 'Пеноблок')
+    Material = apps.get_model('registry', 'Material')
+
+    for material in materials:
+        Material.objects.get_or_create(material=material)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -18,4 +27,5 @@ class Migration(migrations.Migration):
             name='material',
             field=django.contrib.postgres.fields.citext.CICharField(max_length=255, unique=True, verbose_name='Материал'),
         ),
+        migrations.RunPython(fill_materials),
     ]
