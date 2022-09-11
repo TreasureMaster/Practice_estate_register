@@ -1,6 +1,7 @@
 import datetime as dt
 
 from django.db import models
+from django.db.models import functions
 from django.core.exceptions import ValidationError
 from django.core.validators import (
     MinLengthValidator,
@@ -10,6 +11,8 @@ from django.core.validators import (
 from django.contrib.postgres.fields import CICharField
 
 from phonenumber_field.modelfields import PhoneNumberField
+
+from .hybrids import hybrid_property, HybridManager
 
 # Create your models here.
 
@@ -26,6 +29,18 @@ class GetFieldsNameMixin:
     def get_model_name(cls):
         """Получить имя модели"""
         return cls._meta.model_name
+
+    @classmethod
+    def get_related_fields_objs(cls, json_data):
+        """Конвертирует переданные id первичной таблицы в ее экземпляры"""
+        return {
+            **json_data,
+            **{
+                f.name: f.related_model.objects.get(pk=json_data[f.name])
+                for f in cls._meta.get_fields()
+                if isinstance(f, models.ForeignKey) and f.name in json_data
+            }
+        }
 
 
 class Material(models.Model, GetFieldsNameMixin):
@@ -85,7 +100,7 @@ class Deanery(models.Model, GetFieldsNameMixin):
         return self.name
 
 
-class Department(models.Model):
+class Department(models.Model, GetFieldsNameMixin):
     """Департамент, к которому относится помещение"""
     name = CICharField(
         max_length=255,
@@ -108,6 +123,16 @@ class Department(models.Model):
         related_name='departments',
         on_delete=models.SET_NULL,
     )
+
+    objects = HybridManager()
+
+    @hybrid_property
+    def deanery_name(self):
+        return self.deanery.name
+
+    @deanery_name.expression
+    def deanery_name(cls):
+        return functions.Cast('deanery__name', output_field=models.CharField())
 
     class Meta:
         verbose_name = 'Депарамент'
@@ -181,7 +206,7 @@ class Building(models.Model):
         return self.name
 
 
-class Hall(models.Model):
+class Hall(models.Model, GetFieldsNameMixin):
     """Помещение в здании"""
     number = models.PositiveSmallIntegerField(
         verbose_name='Номер помещения',
