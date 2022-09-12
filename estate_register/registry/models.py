@@ -16,7 +16,7 @@ from .hybrids import hybrid_property, HybridManager
 
 # Create your models here.
 
-class GetFieldsNameMixin:
+class GetFieldsProcessMixin:
     """Доступ к именам полей"""
     def get_self_field_names(self):
         """Получить имена объявленных полей"""
@@ -43,7 +43,7 @@ class GetFieldsNameMixin:
         }
 
 
-class Material(models.Model, GetFieldsNameMixin):
+class Material(models.Model, GetFieldsProcessMixin):
     """Материал здания"""
     name = CICharField(
         max_length=255,
@@ -63,7 +63,7 @@ class Material(models.Model, GetFieldsNameMixin):
         return self.name
 
 
-class Target(models.Model, GetFieldsNameMixin):
+class Target(models.Model, GetFieldsProcessMixin):
     """Целевое назначение помещения"""
     name = CICharField(
         max_length=255,
@@ -83,7 +83,7 @@ class Target(models.Model, GetFieldsNameMixin):
         return self.name
 
 
-class Deanery(models.Model, GetFieldsNameMixin):
+class Deanery(models.Model, GetFieldsProcessMixin):
     """Деканат"""
     name = CICharField(
         max_length=255,
@@ -100,7 +100,7 @@ class Deanery(models.Model, GetFieldsNameMixin):
         return self.name
 
 
-class Department(models.Model, GetFieldsNameMixin):
+class Department(models.Model, GetFieldsProcessMixin):
     """Департамент, к которому относится помещение"""
     name = CICharField(
         max_length=255,
@@ -143,7 +143,7 @@ class Department(models.Model, GetFieldsNameMixin):
         return self.name
 
 
-class Building(models.Model):
+class Building(models.Model, GetFieldsProcessMixin):
     """Здание комплекса зданий"""
     name = models.CharField(
         max_length=60,
@@ -197,6 +197,16 @@ class Building(models.Model):
         verbose_name='Материал',
     )
 
+    objects = HybridManager()
+
+    @hybrid_property
+    def material_name(self):
+        return self.material.name
+
+    @material_name.expression
+    def material_name(cls):
+        return functions.Cast('material__name', output_field=models.CharField())
+
     class Meta:
         verbose_name = 'Здание'
         verbose_name_plural = 'Здания'
@@ -206,7 +216,7 @@ class Building(models.Model):
         return self.name
 
 
-class Hall(models.Model, GetFieldsNameMixin):
+class Hall(models.Model, GetFieldsProcessMixin):
     """Помещение в здании"""
     number = models.PositiveSmallIntegerField(
         verbose_name='Номер помещения',

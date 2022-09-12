@@ -9,6 +9,8 @@ from .views import (
     DeaneryListResource,
     DepartmentResource,
     DepartmantListResource,
+    BuildingResource,
+    BuildingListResource,
     HallResource,
     HallListResource,
 )
@@ -25,6 +27,8 @@ urlpatterns = [
     path('deans/<int:pk>/', DeaneryResource.as_view()),
     path('departments/', DepartmantListResource.as_view()),
     path('departments/<int:pk>/', DepartmentResource.as_view()),
+    path('buildings/', BuildingListResource.as_view()),
+    path('buildings/<int:pk>/', BuildingResource.as_view()),
     path('halls/', HallListResource.as_view()),
     path('halls/<int:pk>/', HallResource.as_view()),
 ]
