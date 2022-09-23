@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import (
     Building,
+    Chief,
     Deanery,
     Department,
     Hall,
@@ -209,3 +210,11 @@ class HallListResource(BaseListResource):
 
 class HallResource(BaseResource):
     _model = Hall
+
+
+class ChiefListResource(BaseListResource):
+    _model = Chief
+
+
+class ChiefResource(BaseResource):
+    _model = Chief

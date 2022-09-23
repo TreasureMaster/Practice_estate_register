@@ -296,7 +296,7 @@ class Hall(models.Model, GetFieldsProcessMixin):
         )
 
 
-class Chief(models.Model):
+class Chief(models.Model, GetFieldsProcessMixin):
     """Ответственные за имущество"""
     chief = models.CharField(
         max_length=60,
