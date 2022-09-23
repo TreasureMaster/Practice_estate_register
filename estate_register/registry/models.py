@@ -1,7 +1,7 @@
 import datetime as dt
 
 from django.db import models
-from django.db.models import functions
+from django.db.models import functions, expressions
 from django.core.exceptions import ValidationError
 from django.core.validators import (
     MinLengthValidator,
@@ -132,7 +132,7 @@ class Department(models.Model, GetFieldsProcessMixin):
 
     @deanery_name.expression
     def deanery_name(cls):
-        return functions.Cast('deanery__name', output_field=models.CharField())
+        return expressions.F('deanery__name')
 
     class Meta:
         verbose_name = 'Депарамент'
@@ -205,7 +205,7 @@ class Building(models.Model, GetFieldsProcessMixin):
 
     @material_name.expression
     def material_name(cls):
-        return functions.Cast('material__name', output_field=models.CharField())
+        return expressions.F('material__name')
 
     class Meta:
         verbose_name = 'Здание'
@@ -256,6 +256,32 @@ class Hall(models.Model, GetFieldsProcessMixin):
         related_name='halls',
         verbose_name='Здание',
     )
+
+    objects = HybridManager()
+
+    @hybrid_property
+    def target_name(self):
+        return self.target.name
+
+    @target_name.expression
+    def target_name(cls):
+        return expressions.F('target__name')
+
+    @hybrid_property
+    def department_name(self):
+        return self.department.name
+
+    @department_name.expression
+    def department_name(cls):
+        return expressions.F('department__name')
+
+    @hybrid_property
+    def building_name(self):
+        return self.building.name
+
+    @building_name.expression
+    def building_name(cls):
+        return expressions.F('building__name')
 
     class Meta:
         verbose_name = 'Помещение'

@@ -126,7 +126,6 @@ class BaseResource(View, ResponseSelectionMixin):
             )
         try:
             json_data = self._model.get_related_fields_objs(json_data)
-            print(json_data)
             for fieldname in json_data.keys():
                 setattr(entry, fieldname, json_data[fieldname])
             entry.full_clean()
