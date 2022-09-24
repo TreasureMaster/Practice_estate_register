@@ -15,6 +15,8 @@ from .views import (
     HallListResource,
     ChiefResource,
     ChiefListResource,
+    UnitResource,
+    UnitListResource,
 )
 
 
@@ -35,4 +37,6 @@ urlpatterns = [
     path('halls/<int:pk>/', HallResource.as_view()),
     path('chiefs/', ChiefListResource.as_view()),
     path('chiefs/<int:pk>/', ChiefResource.as_view()),
+    path('units/', UnitListResource.as_view()),
+    path('units/<int:pk>/', UnitResource.as_view()),
 ]

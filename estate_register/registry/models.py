@@ -323,7 +323,7 @@ class Chief(models.Model, GetFieldsProcessMixin):
         return self.chief
 
 
-class Unit(models.Model):
+class Unit(models.Model, GetFieldsProcessMixin):
     """Имущество"""
     name = models.CharField(
         max_length=120,
@@ -369,6 +369,55 @@ class Unit(models.Model):
         verbose_name='Ответственный',
     )
 
+    objects = HybridManager()
+
+    @hybrid_property
+    def hall_number(self):
+        return self.hall.number
+
+    @hall_number.expression
+    def hall_number(cls):
+        return expressions.F('hall__number')
+        # return (
+        #     expressions.Case(
+        #         expressions.When(
+        #             hall__number__isnull=False,
+        #             then=functions.Concat(
+        #                 expressions.Value('помещение '),
+        #                 expressions.F('hall__number'),
+        #                 expressions.Value(', '),
+        #                 expressions.F('hall__building__name'),
+        #                 output_field=models.CharField()
+        #             )
+        #         ),
+        #         expressions.When(
+        #             hall__number__isnull=True,
+        #             then=functions.Concat(
+        #                 expressions.Value('помещение без номера'),
+        #                 expressions.Value(', '),
+        #                 expressions.F('hall__building__name'),
+        #                 output_field=models.CharField()
+        #             )
+        #         ),
+        #     )
+        # )
+
+    @hybrid_property
+    def building_name(self):
+        return self.hall.building.name
+
+    @building_name.expression
+    def building_name(cls):
+        return expressions.F('hall__building__name')
+
+    @hybrid_property
+    def chief_name(self):
+        return self.chief.chief
+
+    @chief_name.expression
+    def chief_name(cls):
+        return expressions.F('chief__chief')
+
     class Meta:
         verbose_name = 'Имущество'
         verbose_name_plural = 'Имущество'
@@ -381,6 +430,8 @@ class Unit(models.Model):
         super().clean_fields(exclude=exclude)
         if self.cost_year < self.date_start.year:
             raise ValidationError({
-                'cost_year': ('Год переоценки не может быть меньше года '
-                             f'постановки на учет: {self.date_start.year}')
+                'cost_year': (
+                    f'Год переоценки ({self.cost_year}) не может быть '
+                    f'меньше года постановки на учет: {self.date_start.year}'
+                )
             })

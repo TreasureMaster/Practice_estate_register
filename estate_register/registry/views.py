@@ -1,3 +1,4 @@
+from ast import In
 import json
 import typing as t
 
@@ -22,6 +23,7 @@ from .models import (
     Hall,
     Material,
     Target,
+    Unit,
 )
 
 # Create your views here.
@@ -218,3 +220,11 @@ class ChiefListResource(BaseListResource):
 
 class ChiefResource(BaseResource):
     _model = Chief
+
+
+class UnitListResource(BaseListResource):
+    _model = Unit
+
+
+class UnitResource(BaseResource):
+    _model = Unit
